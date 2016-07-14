@@ -1,6 +1,6 @@
 var Monopoly = {};
 Monopoly.allowRoll = true;
-Monopoly.moneyAtStart = 1000;
+Monopoly.moneyAtStart = 300; //Changing the money users start with
 Monopoly.doubleCounter = 0;
 
 Monopoly.init = function(){
@@ -19,7 +19,7 @@ Monopoly.start = function(){ //Makes the intro pop-up appears
 
 
 Monopoly.initDice = function(){
-    $(".dice").click(function(){ //When click on the dice
+    $(".dice").click(function(){ //When click on the dice, rolls the Dice if its your turn ad you can play
         if (Monopoly.allowRoll){
             Monopoly.rollDice();
         }
@@ -27,7 +27,7 @@ Monopoly.initDice = function(){
 };
 
 
-Monopoly.getCurrentPlayer = function(){
+Monopoly.getCurrentPlayer = function(){ //Get the player that is currently playing
     return $(".player.current-turn");
 };
 
@@ -36,30 +36,31 @@ Monopoly.getPlayersCell = function(player){
 };
 
 
-Monopoly.getPlayersMoney = function(player){
+Monopoly.getPlayersMoney = function(player){ //Get the current money of each player
     return parseInt(player.attr("data-money"));
 };
 
-Monopoly.updatePlayersMoney = function(player,amount){
-    var playersMoney = parseInt(player.attr("data-money"));
+Monopoly.updatePlayersMoney = function(player,amount){ //Updating user player money
+    var playersMoney = parseInt(player.attr("data-money")); //Turning the player money into a number
     playersMoney -= amount;
-    if (playersMoney < 0 ){
+    if (playersMoney < 0 ){ //If the user has no more money
         alert("you are broke!")
     }
-    player.attr("data-money",playersMoney);
-    player.attr("title",player.attr("id") + ": $" + playersMoney);
-    Monopoly.playSound("chaching");
+    player.attr("data-money",playersMoney); //updating the money of the player
+    player.attr("title",player.attr("id") + ": $" + playersMoney); //updating the title with the player money (when the user hover the player).
+    Monopoly.playSound("chaching"); //Playing a sound when the player is loosing or winning money
 };
 
 
 Monopoly.rollDice = function(){ //Randomizing every dice throw
-    var result1 = Math.floor(Math.random() * 6) + 1 ;
-    var result2 = Math.floor(Math.random() * 6) + 1 ;
-    $(".dice").find(".dice-dot").css("opacity",0);
-    $(".dice#dice1").attr("data-num",result1).find(".dice-dot.num" + result1).css("opacity",1);
-    $(".dice#dice2").attr("data-num",result2).find(".dice-dot.num" + result2).css("opacity",1);
-    if (result1 == result2){
-        Monopoly.doubleCounter++;
+    var result1 = Math.floor(Math.random() * 6) + 1 ; //Randomizing number 1
+    var result2 = Math.floor(Math.random() * 6) + 1 ; //Randomizing number 2
+    $(".dice").find(".dice-dot").css("opacity",0); //Setting every Dices to blank
+    $(".dice#dice1").attr("data-num",result1).find(".dice-dot.num" + result1).css("opacity",1); //Finding Dice 1, updating its number to number 1 randomized and make it appears
+    $(".dice#dice2").attr("data-num",result2).find(".dice-dot.num" + result2).css("opacity",1); //Finding Dice 2, updating its number to number 1 randomized and make it appears
+    if (result1 == result2){ //If there is a double
+
+        Monopoly.doubleCounter++; //update the counter (important to count for the jail rule)
     }
     var currentPlayer = Monopoly.getCurrentPlayer();
     Monopoly.handleAction(currentPlayer,"move",result1 + result2);
@@ -263,7 +264,7 @@ Monopoly.handleAction = function(player,action,amount){
     switch(action){
         case "move":
        	    console.log(amount)
-            Monopoly.movePlayer(player,amount);
+            Monopoly.movePlayer(player,amount); //Move the player to the amount of the dices
              break;
         case "pay":
             Monopoly.updatePlayersMoney(player,amount);
@@ -272,7 +273,7 @@ Monopoly.handleAction = function(player,action,amount){
         case "jail":
             Monopoly.sendToJail(player);
             break;
-    };
+    }
     Monopoly.closePopup();
 };
 
@@ -305,9 +306,9 @@ Monopoly.getNextCell = function(cell){
 };
 
 
-Monopoly.handlePassedGo = function(){
+Monopoly.handlePassedGo = function(){ //When one player passes the go, it gets 10% of the money it received at the beginning of the game
     var player = Monopoly.getCurrentPlayer();
-    Monopoly.updatePlayersMoney(player,Monopoly.moneyAtStart/10);
+    Monopoly.updatePlayersMoney(player,-Monopoly.moneyAtStart/10);
 };
 
 
@@ -319,9 +320,10 @@ Monopoly.isValidInput = function(validate,value){
                 isValid = true;
             }
             //TODO: remove when done
-            console.log("the val " + value)
-            isValid = true;
+            console.log("the val " + value);
+            // isValid = true; //Cannot work if t you validate that it is true whatever
             break;
+
     }
 
     if (!isValid){
@@ -329,7 +331,7 @@ Monopoly.isValidInput = function(validate,value){
     }
     return isValid;
 
-}
+};
 
 Monopoly.showErrorMsg = function(){
     $(".popup-page .invalid-error").fadeTo(500,1);

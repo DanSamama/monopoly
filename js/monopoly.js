@@ -13,13 +13,13 @@ Monopoly.init = function(){
     });
 };
 
-Monopoly.start = function(){
+Monopoly.start = function(){ //Makes the intro pop-up appears
     Monopoly.showPopup("intro")
 };
 
 
 Monopoly.initDice = function(){
-    $(".dice").click(function(){
+    $(".dice").click(function(){ //When click on the dice
         if (Monopoly.allowRoll){
             Monopoly.rollDice();
         }
@@ -52,7 +52,7 @@ Monopoly.updatePlayersMoney = function(player,amount){
 };
 
 
-Monopoly.rollDice = function(){
+Monopoly.rollDice = function(){ //Randomizing every dice throw
     var result1 = Math.floor(Math.random() * 6) + 1 ;
     var result2 = Math.floor(Math.random() * 6) + 1 ;
     $(".dice").find(".dice-dot").css("opacity",0);

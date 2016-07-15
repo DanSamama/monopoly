@@ -106,7 +106,7 @@ Monopoly.setNextPlayerTurn = function(){
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
     if ($("#dice1").attr("data-num") != $("#dice2").attr("data-num")){
         var nextPlayerId = playerId + 1;
-        if (nextPlayerId > $(".player").length){
+        if (nextPlayerId > $(".player").length){ //setting again the Id to be player 1 and 2 TODO Verif
             nextPlayerId = 1;
         }
         currentPlayerTurn.removeClass("current-turn");
@@ -116,7 +116,7 @@ Monopoly.setNextPlayerTurn = function(){
             var currentJailTime = parseInt(nextPlayer.attr("data-jail-time"));
             currentJailTime++;
             nextPlayer.attr("data-jail-time",currentJailTime);
-            if (currentJailTime > 3){
+            if (currentJailTime > 3){ //If the player has already wait 3 turns in jail, let him play
                 nextPlayer.removeClass("jailed");
                 nextPlayer.removeAttr("data-jail-time");
             }
@@ -125,7 +125,7 @@ Monopoly.setNextPlayerTurn = function(){
         }
     }
     Monopoly.closePopup();
-    Monopoly.allowRoll = true;
+    Monopoly.allowRoll = true; //Allowing the next player to play
 };
 
 
@@ -154,7 +154,7 @@ Monopoly.handlePayRent = function(player,propertyCell){
         var properyOwner = $(".player#"+ properyOwnerId);
         console.log(properyOwnerId)
         Monopoly.updatePlayersMoney(player,currentRent);
-        Monopoly.updatePlayersMoney(properyOwner,-1*currentRent);
+        Monopoly.updatePlayersMoney(properyOwner,-1*currentRent); // adding the current price to the owner of the property. minus is to make the currentRent an income
         Monopoly.closeAndNextTurn();
     });
    Monopoly.showPopup("pay");
@@ -190,9 +190,25 @@ Monopoly.handleChanceCard = function(player){
 };
 
 Monopoly.handleCommunityCard = function(player){
-    //TODO: implement this method
-    alert("not implemented yet!")
-    Monopoly.setNextPlayerTurn();
+    var popup = Monopoly.getPopup("community");
+    popup.find(".popup-content").addClass("loading-state");
+    $.get("https://itcmonopoly.appspot.com/get_random_community_card", function(chanceJson){
+        popup.find(".popup-content #text-placeholder").text(chanceJson["content"]);
+        popup.find(".popup-title").text(chanceJson["title"]);
+        popup.find(".popup-content").removeClass("loading-state");
+        popup.find(".popup-content button").attr("data-action",chanceJson["action"]).attr("data-amount",chanceJson["amount"]);
+    },"json");
+    popup.find("button").unbind("click").bind("click",function(){
+        var currentBtn = $(this);
+        var action = currentBtn.attr("data-action");
+        var amount = currentBtn.attr("data-amount");
+        console.log("testing the action and amount " + action + " " + amount)
+        Monopoly.handleAction(player,action,amount);
+    });
+    Monopoly.showPopup("community");
+    // //TODO: implement this method
+    // alert("not implemented yet!")
+    // Monopoly.setNextPlayerTurn();
 };
 
 
@@ -250,9 +266,9 @@ Monopoly.handleBuy = function(player,propertyCell,propertyCost){
         Monopoly.updatePlayersMoney(player,propertyCost);
         var rent = Monopoly.calculateProperyRent(propertyCost);
 
-        propertyCell.removeClass("available")
+        propertyCell.removeClass("available") //When the user can and buy the property, should no be available
                     .addClass(player.attr("id"))
-                    .attr("data-owner",player.attr("id"))
+                    .attr("data-owner",player.attr("id")) //Identifying that this property is owned
                     .attr("data-rent",rent);
         Monopoly.setNextPlayerTurn();
     }
@@ -267,7 +283,7 @@ Monopoly.handleAction = function(player,action,amount){
     switch(action){
         case "move":
        	    console.log(amount)
-            Monopoly.movePlayer(player,amount); //Move the player to the amount of the dices> Pk on a pas setNextPlayerTurn
+            Monopoly.movePlayer(player,amount); //Move the player to the amount of the dices
              break;
         case "pay":
             Monopoly.updatePlayersMoney(player,amount); //Updating the amount
@@ -337,8 +353,8 @@ Monopoly.isValidInput = function(validate,value){
 };
 
 Monopoly.showErrorMsg = function(){
-    $(".popup-page .invalid-error").fadeTo(500,1);
-    setTimeout(function(){
+    $(".popup-page .invalid-error").fadeTo(500,1); //Make the error message appear 1/2second after pushing the button
+    setTimeout(function(){ //make the message disappear after 2 seconds
             $(".popup-page .invalid-error").fadeTo(500,0);
     },2000);
 };

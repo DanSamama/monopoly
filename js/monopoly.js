@@ -132,11 +132,11 @@ Monopoly.setNextPlayerTurn = function(){
 Monopoly.handleBuyProperty = function(player,propertyCell){
     var propertyCost = Monopoly.calculateProperyCost(propertyCell);
     var popup = Monopoly.getPopup("buy");
-    popup.find(".cell-price").text(propertyCost);
-    popup.find("button").unbind("click").bind("click",function(){
+    popup.find(".cell-price").text(propertyCost); //get the price of the cell into the popup
+    popup.find("button").unbind("click").bind("click",function(){ // Creating an event listener, erasing the link and creating a new one
         var clickedBtn = $(this);
         if (clickedBtn.is("#yes")){
-            Monopoly.handleBuy(player,propertyCell,propertyCost);
+            Monopoly.handleBuy(player,propertyCell,propertyCost); //if the user click yes,
         }else{
             Monopoly.closeAndNextTurn();
         }
@@ -206,13 +206,13 @@ Monopoly.sendToJail = function(player){
 };
 
 
-Monopoly.getPopup = function(popupId){
+Monopoly.getPopup = function(popupId){ //Getting to popUp to appears according to the specific Id sent
     return $(".popup-lightbox .popup-page#" + popupId);
 };
 
-Monopoly.calculateProperyCost = function(propertyCell){
-    var cellGroup = propertyCell.attr("data-group");
-    var cellPrice = parseInt(cellGroup.replace("group","")) * 5;
+Monopoly.calculateProperyCost = function(propertyCell){ //
+    var cellGroup = propertyCell.attr("data-group"); //Getting the group number of the cell the user is on
+    var cellPrice = parseInt(cellGroup.replace("group","")) * 5; //Only selecting the number from the attribute and times 5.
     if (cellGroup == "rail"){
         cellPrice = 10;
     }
@@ -245,6 +245,7 @@ Monopoly.handleBuy = function(player,propertyCell,propertyCost){
     var playersMoney = Monopoly.getPlayersMoney(player)
     if (playersMoney < propertyCost){
         Monopoly.showErrorMsg();
+        Monopoly.playSound("evil");
     }else{
         Monopoly.updatePlayersMoney(player,propertyCost);
         var rent = Monopoly.calculateProperyRent(propertyCost);

@@ -36,7 +36,7 @@ Monopoly.getPlayersCell = function(player){
 };
 
 
-Monopoly.getPlayersMoney = function(player){ //Get the current money of each player
+Monopoly.getPlayersMoney = function(player){ //Get the current money of player
     return parseInt(player.attr("data-money"));
 };
 
@@ -67,7 +67,7 @@ Monopoly.rollDice = function(){ //Randomizing every dice throw
 };
 
 
-Monopoly.movePlayer = function(player,steps){
+Monopoly.movePlayer = function(player,steps){ //TODO What is steps?
     Monopoly.allowRoll = false;
     var playerMovementInterval = setInterval(function(){
         if (steps == 0){
@@ -104,23 +104,25 @@ Monopoly.handleTurn = function(){
 Monopoly.setNextPlayerTurn = function(){
     var currentPlayerTurn = Monopoly.getCurrentPlayer();
     var playerId = parseInt(currentPlayerTurn.attr("id").replace("player",""));
-    var nextPlayerId = playerId + 1;
-    if (nextPlayerId > $(".player").length){
-        nextPlayerId = 1;
-    }
-    currentPlayerTurn.removeClass("current-turn");
-    var nextPlayer = $(".player#player" + nextPlayerId);
-    nextPlayer.addClass("current-turn");
-    if (nextPlayer.is(".jailed")){
-        var currentJailTime = parseInt(nextPlayer.attr("data-jail-time"));
-        currentJailTime++;
-        nextPlayer.attr("data-jail-time",currentJailTime);
-        if (currentJailTime > 3){
-            nextPlayer.removeClass("jailed");
-            nextPlayer.removeAttr("data-jail-time");
+    if ($("#dice1").attr("data-num") != $("#dice2").attr("data-num")){
+        var nextPlayerId = playerId + 1;
+        if (nextPlayerId > $(".player").length){
+            nextPlayerId = 1;
         }
-        Monopoly.setNextPlayerTurn();
-        return;
+        currentPlayerTurn.removeClass("current-turn");
+        var nextPlayer = $(".player#player" + nextPlayerId);
+        nextPlayer.addClass("current-turn");
+        if (nextPlayer.is(".jailed")){
+            var currentJailTime = parseInt(nextPlayer.attr("data-jail-time"));
+            currentJailTime++;
+            nextPlayer.attr("data-jail-time",currentJailTime);
+            if (currentJailTime > 3){
+                nextPlayer.removeClass("jailed");
+                nextPlayer.removeAttr("data-jail-time");
+            }
+            Monopoly.setNextPlayerTurn();
+            return;
+        }
     }
     Monopoly.closePopup();
     Monopoly.allowRoll = true;
@@ -264,10 +266,10 @@ Monopoly.handleAction = function(player,action,amount){
     switch(action){
         case "move":
        	    console.log(amount)
-            Monopoly.movePlayer(player,amount); //Move the player to the amount of the dices
+            Monopoly.movePlayer(player,amount); //Move the player to the amount of the dices> Pk on a pas setNextPlayerTurn
              break;
         case "pay":
-            Monopoly.updatePlayersMoney(player,amount);
+            Monopoly.updatePlayersMoney(player,amount); //Updating the amount
             Monopoly.setNextPlayerTurn();
             break;
         case "jail":

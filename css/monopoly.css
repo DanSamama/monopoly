@@ -142,6 +142,7 @@ body{
     height:20%;
     width:100%;
     background-color: transparent;
+
 }
 
 .board .game.cell .content{
@@ -221,4 +222,9 @@ body{
 
 .dice-dot.right{
     margin-left:36%;
+}
+.jailed{
+    background-image:url(../images/sadsmiley.jpg);
+    background-size: cover;
+
 }

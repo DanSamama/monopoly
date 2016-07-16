@@ -212,8 +212,6 @@ Monopoly.handleCommunityCard = function(player){
         Monopoly.handleAction(player,action,amount);
     });
     Monopoly.showPopup("community");
-    // //TODO: implement this method
-    // alert("not implemented yet!")
     // Monopoly.setNextPlayerTurn();
 };
 
@@ -339,7 +337,7 @@ Monopoly.isValidInput = function(validate,value){
     var isValid = false;
     switch(validate){
         case "numofplayers":
-            if(value > 1 && value <= 4){
+            if(value > 1 && value <= 6){
                 isValid = true;
             }
             //TODO: remove when done

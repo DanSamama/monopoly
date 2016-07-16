@@ -228,3 +228,7 @@ body{
     background-size: cover;
 
 }
+[gotIT=smile]{
+    background-image:url(../images/happySmiley.jpg);
+    background-size: cover;
+}

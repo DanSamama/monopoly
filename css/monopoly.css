@@ -199,10 +199,10 @@ body{
 .player#player4 , .player4.cell .content{
     background-color: #d061cd;
 }
-.player#player5 , .player4.cell .content{
+.player#player5 , .player5.cell .content{
     background-color: yellow;
 }
-.player#player6 , .player4.cell .content{
+.player#player6 , .player6.cell .content{
     background-color: red;
 }
 
